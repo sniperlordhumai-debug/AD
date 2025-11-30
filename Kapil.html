@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Reels Hub 🤑 - Viral Shorts</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="refresh" content="30">
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #000;
+    color: #FFD700;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .ad-top {
+    width: 100%;
+    height: 60px;
+    background: #111;
+    border-bottom: 3px solid #FFD700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .shorts-box {
+    width: 100%;
+    max-width: 450px;
+    height: calc(100vh - 140px);
+    border: 3px solid #FFD700;
+    border-radius: 12px;
+    margin-top: 4px;
+    position: relative;
+    background: #000;
+    overflow: hidden;
+  }
+
+  .title-inside {
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+    color: #FFD700;
+    font-weight: bold;
+    padding: 5px 0;
+    border-bottom: 2px solid #FFD700;
+    position: absolute;
+    top: 0;
+    background: rgba(0,0,0,0.8);
+    z-index: 10;
+  }
+
+  iframe {
+    width: 100%;
+    height: calc(100% - 35px);
+    position: absolute;
+    top: 35px; /* below title */
+    left: 0;
+    border: none;
+  }
+
+  .loader {
+    width: 35px;
+    height: 35px;
+    border: 4px solid #FFD700;
+    border-top: 4px solid transparent;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 20;
+    display: none;
+  }
+  @keyframes spin { 100% { transform: rotate(360deg); } }
+
+  #muteBtn {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(255,215,0,0.9);
+    font-size: 12px;
+    border: none;
+    border-radius: 8px;
+    padding: 5px 10px;
+    cursor: pointer;
+    color: #000;
+    z-index: 20;
+  }
+
+  .ad-bottom {
+    width: 100%;
+    height: 80px;
+    background: #111;
+    border-top: 3px solid #FFD700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 0;
+    overflow: hidden;
+  }
+</style>
+</head>
+<body>
+
+<div class="ad-top">
+  <div id="adsterra-top"></div>
+</div>
+
+<div class="shorts-box">
+  <div class="title-inside">🔥 Reels Hub 🤑</div>
+
+  <div class="loader" id="loader"></div>
+
+  <iframe id="player"
+    allowfullscreen
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+  </iframe>
+
+  <button id="muteBtn">Mute</button>
+</div>
+
+<div class="ad-bottom">
+  <div id="adsterra-bottom"></div>
+</div>
+
+<script>
+  const API_KEY = "AIzaSyBD1cywHqAGAfN4R09yNc8XqdNZUFcNRpc";
+  const API_URL =
+    "https://www.googleapis.com/youtube/v3/search" +
+    "?part=snippet&type=video&videoDuration=short" +
+    "&videoEmbeddable=true&maxResults=25" +
+    "&order=viewCount&regionCode=IN&key=" + API_KEY;
+
+  let videos=[], i=0, muted=false;
+  const iframe=document.getElementById("player");
+  const loader=document.getElementById("loader");
+  const muteBtn=document.getElementById("muteBtn");
+
+  async function getVideos(){
+    try {
+      const r=await fetch(API_URL);
+      const d=await r.json();
+      videos = d.items.map(v=>v.id.videoId).filter(Boolean);
+    } catch {
+      videos=["SikjWT4wUbU","ZUmkQGGKP_8","sf-UNho8cAs"];
+    }
+    load();
+  }
+
+  function load(){
+    loader.style.display="block";
+    iframe.src =
+      `https://www.youtube.com/embed/${videos[i]}?autoplay=1&mute=${muted?1:0}`;
+    setTimeout(()=>loader.style.display="none",1000);
+  }
+
+  document.addEventListener("wheel",e=>{
+    if(e.deltaY>0) i=(i+1)%videos.length;
+    else i=(i-1+videos.length)%videos.length;
+    load();
+  });
+
+  let sY=0;
+  document.addEventListener("touchstart",e=>sY=e.touches[0].clientY);
+  document.addEventListener("touchend",e=>{
+    let eY=e.changedTouches[0].clientY;
+    if(eY<sY-50) i=(i+1)%videos.length, load();
+    if(eY>sY+50) i=(i-1+videos.length)%videos.length, load();
+  });
+
+  muteBtn.onclick=()=>{
+    muted=!muted;
+    muteBtn.textContent = muted ? "Unmute" : "Mute";
+    load();
+  };
+
+  getVideos();
+</script>
+
+<script>
+  setTimeout(()=>{
+    // TOP
+    var t1=document.createElement("script");
+    t1.type="text/javascript";
+    t1.innerHTML=`
+      atOptions = {
+        'key' : '4cead5d975aba91d4dfc50baa0c183b5',
+        'format' : 'iframe',
+        'height' : 50,
+        'width' : 320,
+        'params' : {}
+      };
+    `;
+    document.querySelector("#adsterra-top").appendChild(t1);
+    var t2=document.createElement("script");
+    t2.src="//www.highperformanceformat.com/4cead5d975aba91d4dfc50baa0c183b5/invoke.js";
+    document.querySelector("#adsterra-top").appendChild(t2);
+
+    // BOTTOM
+    var b1=document.createElement("script");
+    b1.type="text/javascript";
+    b1.innerHTML=`
+      atOptions = {
+        'key' : 'f310952f724cb4ad0ce79ff766809312',
+        'format' : 'iframe',
+        'height' : 60,
+        'width' : 468,
+        'params' : {}
+      };
+    `;
+    document.querySelector("#adsterra-bottom").appendChild(b1);
+    var b2=document.createElement("script");
+    b2.src="//www.highperformanceformat.com/f310952f724cb4ad0ce79ff766809312/invoke.js";
+    document.querySelector("#adsterra-bottom").appendChild(b2);
+
+  },1200);
+</script>
+
+</body>
+</html>
